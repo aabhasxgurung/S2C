@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, MutationCtx } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 export const getProject = query({
@@ -49,10 +49,13 @@ export const createProject = mutation({
   },
 });
 
-async function getNextProjectNumber(ctx: any, userId: string): Promise<number> {
+async function getNextProjectNumber(
+  ctx: MutationCtx,
+  userId: string,
+): Promise<number> {
   const counter = await ctx.db
     .query("project_counters")
-    .withIndex("by_userId", (q: any) => q.eq("userId", userId))
+    .withIndex("by_userId", (q) => q.eq("userId", userId))
     .first();
 
   if (!counter) {

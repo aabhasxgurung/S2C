@@ -8,6 +8,8 @@ import { Id } from "../../../convex/_generated/dataModel";
 import { CircleQuestionMark, Hash, LayoutTemplate, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useAppSelector } from "@/redux/store";
+import CreateProject from "../buttons/project";
 
 interface TabProps {
   label: string;
@@ -22,6 +24,8 @@ const Navbar = () => {
   const hasCanvas = pathname.includes("canvas");
   const hasStyleGuide = pathname.includes("style-guide");
 
+  const me = useAppSelector((state) => state.profile);
+
   const project = useQuery(
     api.project.getProject,
     projectId ? { projectId: projectId as Id<"projects"> } : "skip",
@@ -30,12 +34,12 @@ const Navbar = () => {
   const tabs: TabProps[] = [
     {
       label: "Canvas",
-      href: `/dashboard/canvas?project=${projectId}`,
+      href: `/dashboard/${me?.name}/canvas?project=${projectId}`,
       icon: <Hash className="h-4 w-4" />,
     },
     {
       label: "Style Guide",
-      href: `/dashboard/style-guide?project=${projectId}`,
+      href: `/dashboard/${me?.name}/style-guide?project=${projectId}`,
       icon: <LayoutTemplate className="h-4 w-4" />,
     },
   ];
@@ -44,7 +48,7 @@ const Navbar = () => {
     <div className="grid grid-cols-2 lg:grid-cols-3 p-6 fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center gap-4">
         <Link
-          href={`/dashboard/`}
+          href={`/dashboard/${me?.name}`}
           className="w-8 h-8 rounded-full border-3 border-white bg-black flex items-center justify-center"
         >
           <div className="w-4 h-4 rounded-full bg-white"></div>
@@ -87,16 +91,17 @@ const Navbar = () => {
         <span className="text-sm text-white/50"></span>
         <Button
           variant="secondary"
-          className="rounded-full h-12 w-12 flex items-center justify-center backdrop-blur-xl bg-white/8 border border-white/12 saturate-150 hover:bg-white/12 hover:border-white/16 hover:bg-white/12 hover:border-white/16 hover:backdrop-blur-sm"
+          className="rounded-full h-12 w-12 flex items-center justify-center backdrop-blur-xl bg-white/8 border border-white/12 saturate-150 hover:bg-white/12 hover:backdrop-blur-sm"
         >
           <CircleQuestionMark className="size-5 text-white" />
         </Button>
         <Avatar className="size-12 ml-2">
-          <AvatarImage src={"/images/logo.png"} />
+          <AvatarImage src={me.image || ""} />
           <AvatarFallback>
             <User className="size-5 text-black" />
           </AvatarFallback>
         </Avatar>
+        {!hasCanvas && !hasStyleGuide && <CreateProject />}
       </div>
     </div>
   );

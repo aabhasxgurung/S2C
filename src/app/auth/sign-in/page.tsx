@@ -1,11 +1,13 @@
 "use client";
+import Google from "@/components/buttons/oauth/google";
+import Microsoft from "@/components/buttons/oauth/microsoft";
 import { LogoIcon } from "@/components/logo";
-import Google from "@/components/oauth/google";
-import Microsoft from "@/components/oauth/microsoft";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/user-auth";
+
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
